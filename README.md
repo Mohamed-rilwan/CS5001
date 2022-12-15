@@ -1,3 +1,4 @@
-# CS5001
+# CS5001 - Object oriented Programming
 
-This repository contains work related to CS5001 - Object oriented Programming in University Of St.Andrews
+This repository contains work related to CS5001 - Object oriented Programming in University Of St.Andrews, 2022
+
