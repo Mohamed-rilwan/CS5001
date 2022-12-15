@@ -1,0 +1,30 @@
+public class PalindromeChecker {
+
+    public static void main(String[] args) {
+       System.out.println(Is_palindrome("civic"));
+           System.out.println(Is_palindrome("daily"));
+        System.out.println(Is_palindrome("level"));
+            System.out.println(Is_palindrome(null));
+            System.out.println(Is_palindrome("smoke"));
+        System.out.println(Is_palindrome("refer"));
+
+}
+
+    /**
+     * Is_palindrome is a Java method that returns a boolean.
+     * It took me a while to write, but I'm happy with the result.
+     * @arg StringX the string we're checking
+     * @return a boolean
+     */
+    public static boolean Is_palindrome(String StringX) {
+    if (StringX == null) {System.out.println("Something bad happened"); System.exit(0);
+      } else {
+           for (int i = 0; i < 5; i++)
+                    if (StringX.charAt(i) != StringX.charAt(5-i-1)) return false;
+          return true;
+        }
+
+    return true;  // we should never get here
+    }
+
+}

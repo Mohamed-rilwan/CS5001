@@ -1,0 +1,36 @@
+public class PalindromeChecker {
+
+    public static void main(String[] args) {
+        String[] words = {"civic", "daily", "level", null, "smoke", "refer"};
+
+        for (String word: words) {
+            System.out.print(word + ": ");
+            try {
+                System.out.println(isPalindrome(word));
+            } catch (Exception e) {
+                System.out.println("Invalid input");
+            }
+        }
+
+    }
+
+    /**
+     * Determines whether the given string is a palindrome.
+     * A palindrome is any string that is the same when reversed.
+     * @param word The string to be checked
+     */
+    public static boolean isPalindrome(String word) {
+        if (word == null) {
+            throw new IllegalArgumentException("Input cannot be null");
+        }
+
+        int length = word.length();
+        for (int pos = 0; pos < length / 2; pos++) {
+            if (word.charAt(pos) != word.charAt(length - pos - 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+}

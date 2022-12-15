@@ -1,0 +1,37 @@
+Functionality
+
++ The submission passes 10 out of 10 public game tests.
++ The submission passes 5 out of 5 public player tests.
++ The submission passes 12 out of 12 public square tests.
++ The submission passes 36 out of 36 public piece tests.
+[Not applicable] The submission passes ? out of 8 private game tests.
+	Game's constants have the wrong visibility. However, the tests seem to also fail due to an error on our end, therefore the results are discarded.
++ The submission passes 2 out of 2 private player tests.
++ The submission passes 3 out of 3 private square tests.
+- The submission passes 22 out of 25 private piece tests.
+	Piece's attack method does not handle the attacking of an empty square; an exception should be thrown.
+	There's a slight mistake in your scout's getLegalMoves. The for loops don't allow row or col to be 0 as the stopping condition is > 0.
+	If a spy attacks a bomb, both pieces are removed from the board. This should be considered a draw.
+
+Program design
+
+-- The program design matches the UML diagram.
+	Two of game's constants are private instead of public.
+	You add public methods which aren't in the UML diagram, which is fine.
+
+Code quality
+
+- The code respects the principles of OOP.
+	Flag and Bomb have the same getLegalMoves and getLegalAttacks. This logic could have been implemented one level above.
+- The code is of good style.
+	For getLegalMoves and getLegalAttacks you return ArrayLists of unspecified type when they should contain squares.
++ You adequately commented, i.e. a reader can rapidly understand its logic.
++ You cleaned up the code, i.e. there are no large portions of unused code leftover from prototyping.
+[Not applicable] Where you borrow code, you give credit.
++ The code is anonymised.
+
+Other comments
+
+Grading
+
+All basic tests passing, with reasonable code style and doc.

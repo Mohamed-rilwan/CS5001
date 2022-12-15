@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Clean Code</title>
+</head>
+<body>
+
+<h1 class="title">Clean Code</h1>
+
+<img src="CleanCode.jpg" style="float:right; margin-left: 12px; margin-bottom: 12px;" width="20%"/>
+
+<p>
+In his book <a href="https://encore.st-andrews.ac.uk/iii/encore/record/C__Rb2385442">Clean  Code: A Handbook 
+  of Agile Software Craftsmanship</a> Robert C. Martin (aka. "Uncle Bob") makes the basic 
+observation that <strong>we read source code more often than we write code</strong>. In fact, reading and writing 
+are intimately tied via our need to make sense of what the source code in front of us does, how its different components 
+relate to each other and where ‘stuff’ (e.g., a variable declaration) can be found in the source.
+</p>
+
+<blockquote>
+<p>Have you ever played back an edit session? In the 80s and 90s we had editors like Emacs that kept track of every keystroke. You could work for an hour and then play back your whole edit session like a high-speed movie. When I did this, the results were fascinating. The vast majority of the playback was scrolling and navigating to other modules! (Robert C. Martin, Clean Code)</p>
+</blockquote>
+
+<p>
+Based on this, he introduces a set of software coding principles that help to improve the quality of source code 
+by making it easier to read. The aim is to reduce the effort required to understand code, to aid its inspection 
+for possible programming errors and to improve our ability to test and reuse parts of it.
+</p>
+
+<p>
+In the lecture, I introduce a number of the principles that can be found in the early chapters of the book 
+(roughly chapters 1-5). You will find more advice on writing clean code on the web and in other books such 
+as <a href="https://encore.st-andrews.ac.uk/iii/encore/record/C__Rb1338741">The Pragmatic Programmer</a> by 
+Hunt and Thomas or Joshua Bloch’s 
+<a href="https://encore.st-andrews.ac.uk/iii/encore/record/C__Rb2521711">Effective Java</a>. Our
+<a href="https://info.cs.st-andrews.ac.uk/student-handbook/learning-teaching/programming-style.html">student 
+   handbook also has useful advice on programming style</a>.
+</p>
+
+<p>
+Sometimes advice found in one place can contradict advice found elsewhere, so you should exercise judgement when 
+applying design guidelines. It is probably more important to be consistent than to follow any set of guidelines 
+slavishly.</p>
+
+<h2 id="clean-code-basics">Clean Code Basics</h2>
+
+<p>
+(Syntactical) correctness is not all there is. Just because it compiles and runs does not mean you have written 
+good code. Code should be easy to read. It should also be easy to modify, reuse and test.
+</p>
+
+<h3 id="naming">Naming</h3>
+<ul>
+<li>Use Intention-Revealing Names – the names of variables, methods, classes etc. should tell what these things are about.</li>
+<li>Avoid Disinformation – do not refer to something as a List unless it actually is a List.</li>
+<li>Use meaningful distinctions – arg1, arg2, arg3 are not meaningful.</li>
+<li>Use pronouncable, searchable names</li>
+<li>Avoid encodings – nameString contains superfluous information, the IDE can tell you what type a variable is.</li>
+<li>Leave interfaces unadorned – ShapeFactory rather than IShapeFactory, better to have a ShapeFactoryImpl as implementations are hidden from users!</li>
+<li>Avoid single-letter variable names and similar things that have nothing to do with the problem domain.</li>
+<li>Classes should have noun or noun-phrase names rather than verb names – AddressParser; avoid empty words such as Info, Data, Manager, Processor in a class name</li>
+<li>Same holds for objects</li>
+<li>Methods should have a verb name; Accessors, mutators, and predicates should be named for their value and prefixed with get, set, and is</li>
+<li>“Don’t be cute” – what does whack() do?</li>
+<li>Pick one word per concept and stick with it – either fetch, retrieve or get – but careful to use the word only for things that are the same</li>
+<li>Use solution-domain names</li>
+<li>Avoid meaningless prefixes – they work against code completion</li>
+<li>Wrap variables into methods and classes to give them context – what does ‘state’ mean if it does not appear in an Address class?</li>
+</ul>
+
+<h3 id="methods">Methods</h3>
+<ul>
+  <li>Make them small! Do one thing, do it well, do it only! </li>
+  <li>What happens in a method should be one conceptual level below the method name: to do A we need
+    to do B and C/</a>
+  <li>Order functions so you can read them one by one like a narrative: to do C we need to do D and
+    E.</li>
+  <li>A method that has sections does more than one thing! </li>
+  <li>Do not mix levels of abstraction.</li>
+  <li>switch() statements always do N things – use polymorphism to get rid of them </li>
+  <li>Use descriptive names: "You know you are working on clean code when each routine turns out to be pretty 
+    much what you expected."</li>
+  <li>Methods should either do something or answer a question but not both at the same time.</li>
+</ul>
+
+<h3 id="method-arguments">Method Arguments</h3>
+<ul>
+<li>"The ideal number of arguments for a function is zero (niladic). Next comes one (monadic),
+  followed closely by two (dyadic). Three arguments (triadic) should be avoided where possible. More
+  than three (polyadic) requires very special justiﬁcation — and then shouldn’t be used anyway."</li>
+<li>The problem is that developers might get confused about the ordering of arguments. Java does 
+  not have named arguments! Classes grouping arguments can help:</li>
+</ul>
+
+<pre>
+        Circle makeCircle(double x, double y, double radius); 
+        Circle makeCircle(Point center, double radius);
+</pre>
+
+<ul>
+<li>The "builder pattern" can also be used to avoid the problem (see Bloch, Effective Java). We will encounter 
+  it later in the module.</li>
+<li>Avoid output arguments – arguments are for inputs and nothing passed into a method as an
+  argument should get modified! </li>
+<li>"Side effects are lies. Your function promises to do one thing, but it also does other hidden things. 
+  Sometimes it will make unexpected changes to the variables of its own class. Sometimes it will make them 
+  to the parameters passed into the function or to system globals. In either case they are devious and 
+  damaging mistruths that often result in strange temporal couplings and order dependencies."</li>
+</ul>
+
+<pre>
+      public boolean checkPassword(String userName, String password) { 
+        User user = UserGateway.findByName(userName); 
+        if (user != User.NULL) { 
+          String codedPhrase = user.getPhraseEncodedByPassword(); 
+          String phrase = cryptographer.decrypt(codedPhrase, password); 
+          if ("Valid Password".equals(phrase)) { 
+            Session.initialize(); return true; 
+          } 
+        } 
+        return false; 
+      }
+</pre>
+
+<h2 id="comments">Comments</h2>
+<ul>
+<li>"Nothing can be quite so helpful as a well-placed comment. Nothing can clutter up a module ore than 
+  frivolous dogmatic comments. Nothing can be quite so damaging as an old crufty comment that propagates 
+  lies and misinformation."</li>
+<li>If our code is readable and informative enough then comments are not needed much.</li>
+<li>"When you ﬁnd yourself in a position where you need to write a comment, think it through and see
+  whether there isn’t some way to turn the tables and express yourself in code."</li>
+<li>Express intention, mechanism should be obvious in clean code and does not need to be repeated in comment.</li>
+<li>Comments cause a maintenance problem: effort to maintain them is better invested in producing clean code that does not need comments.</li>
+<li>Good comments:
+<ul>
+<li>Legal comments (author, copyright, license etc.); IDEs might collapse lengthy legal comments</li>
+<li>Informative Comments</li>
+<li>JavaDoc comments in public APIs</li>
+<li>Expressing intention</li>
+<li>Clarifications</li>
+<li>Explaining code that cannot be changed and is therefore unclear, e.g., when using a standard library</li>
+<li>Warning of consequences</li>
+<li>TODO comments</li>
+<li>Highlighting something as important that is not obvious</li>
+</ul></li>
+<li>All other comments should be considered carefully ;o)</li>
+<li>"Inaccurate comments are far worse than no comments at all. They delude and mislead."</li>
+<li>"COMMENTS DO NOT MAKE UP FOR BAD CODE!" Use functions or variable names instead of comments:</li>
+</ul>
+
+<pre>
+        // Check to see if the employee is 
+        // eligible for full benefits 
+        if ((employee.flags &amp; HOURLY_FLAG) &amp;&amp; (employee.age &gt; 65)) }
+        // versus 
+        if (employee.isEligibleForFullBenefits()) 
+</pre>
+
+<h2 id="formatting">Formatting</h2>
+<ul>
+  <li>Vertical formatting
+  <ul>
+    <li>keep things to a length that people will want to read.</li>
+    <li>separate thoughts by empty lines (try removing empty lines in some code to see the effect)</li>
+    <li>Keep related thoughts close (this is where dogmatic comments get in the way)</li>
+  </ul>
+  </li>
+  <li>Higher-level stuff at the top, details further down.</li>
+  <li>Place variables close to where they are used.</li>
+  <li>Instance variables should be at the top of a class.</li>
+  <li>Prefer short lines over long ones, avoid lines of more than 80 characters, never use more than, say, 100.</li>
+  <li>Use IDE functions (Source/Format or Ctrl-Shift-F) to keep things tidy and aligned with a consistent code style.</li>
+</ul>
+
+<h2 id="trainwrecks">Trainwrecks</h2>
+<ul>
+  <li>Avoid 'trainwrecks':</li>
+</ul>
+
+<pre>
+        client.GetAccounts().getAccount(1).ApplyPayment(300.00).isValid().send()
+</pre>
+
+<ul>
+<li>Instead, create variables to assign each partial result to. This improves readability, reduces
+  the line length, allows people to see the return types involved and creates lines that a debugger
+  can be pointed at.</li>
+<li>This is different from code like this used in builder pattern, where the builder class always returns 
+  <code>this</code>:</li>
+</ul>
+
+<pre>
+        ShapeBuilder.setColor(“red”).setSize(1).setStroke(1)
+</pre>
+
+<h2 id="more-on-clean-code">More on Clean Code</h2>
+
+<p>
+"Uncle Bob" and others have identified plenty more rules for producing clean code and I will try to bring 
+them into play over the course of the module. Writing clean code is not something you can adopt in a day 
+and the practices involved require regular exercise. In fact, it is near impossible to write clean code 
+straight away. Rather, clean code emerges through successive refinement of code over time. Hence, whenever 
+you work on your code, follow the boy/girl scout principle: <em>"Leave the campground cleaner than you
+  found it"</em>. 
+</p>
+
+<h2 id="findbugs-and-checkstyle">Findbugs and Checkstyle</h2>
+
+<p>There are a set of automated tools that use simple heuristics to find problems with code but
+despite the simplicity of the rules employed they can uncover a surprisingly large number of issues.
+<a href="http://findbugs.sourceforge.net/">Findbugs</a> and <a
+   href="http://checkstyle.sourceforge.net/">Checkstyle</a> are both static source code analysers
+ that aim to uncover possible problems in Java source code and to help improve coding style.</p>
+<p>Each produces a report on the problems found in Java source code that can be used as a starting
+point for code improvements. Of the three tools, Findbugs is arguably the most important one as any
+output it produces is likely to be an indication of an actual programming mistake - as opposed to
+‘merely’ a failure to adhere to stylistic conventions.</p> <p>Using the two together is a great way
+to improve the quality of the code. The fact that they can be run automatically means they can be
+used routinely, uncovering problems quickly and without wasting human effort. Any code reviews can
+then focus on the kinds of more complex problems that these static analysis tools are not
+uncovering.</p> 
+</body>
+</html>
